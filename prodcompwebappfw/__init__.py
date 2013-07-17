@@ -12,10 +12,8 @@ class ProductCompareWebApp(object):
         
     def serve_once(self, port):
         """Helper method to serve this app on localhost"""
-        print 'serving'
         httpd = make_server('localhost', port, self)
         httpd.handle_request()
-        print 'out'
 
     def __call__(self, environ, start_response):
         response_headers = [('Content-type', 'text/html')]
