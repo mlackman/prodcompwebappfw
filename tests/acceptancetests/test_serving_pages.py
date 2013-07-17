@@ -10,9 +10,9 @@ sys.path.insert(0, join(pardir, pardir))
 
 from prodcompwebappfw import ProductCompareWebApp
 
-class TestServingIndexPage(unittest.TestCase):
+class TestServingPages(unittest.TestCase):
 
-    def test(self):
+    def test_serving_index_page(self):
         self.app = ProductCompareWebApp(index_template='templates/index.html',\
                                         products_template='templates/products.html',\
                                         no_products_found_template='templates/no_products.html',
