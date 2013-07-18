@@ -14,33 +14,31 @@ creating Request object from http request and asking Router to route the request
 
 class TestWebApp(unittest.TestCase):
 
-    def test_it_routes_requests(self):
-        request_factory = yamf.Mock()
-        router = yamf.Mock()
-        app = WebApp(router, request_factory)
+    def setUp(self):
+        self.request_factory = yamf.Mock()
+        self.router = yamf.Mock()
+        self.app = WebApp(self.router, self.request_factory)
 
+    def test_it_routes_requests(self):
         environ = {}
         request = yamf.Mock()
-        request_factory.create.mustBeCalled.withArgs(environ).returns(request)
-        router.route.mustBeCalled.withArgs(request).returns(http.HttpResponse())
+        self.request_factory.create.mustBeCalled.withArgs(environ).returns(request)
+        self.router.route.mustBeCalled.withArgs(request).returns(http.HttpResponse())
 
-        app(environ, yamf.MockMethod())
+        self.app(environ, yamf.MockMethod())
 
-        router.verify()
-        request_factory.verify()
+        self.router.verify()
+        self.request_factory.verify()
 
     def test_it_responses(self):
-        request_factory = yamf.Mock()
-        router = yamf.Mock()
-        app = WebApp(router, request_factory)
-        
-        router.route.returns(http.HttpResponse(status="100 this is the text", data="data", 
+        self.router.route.returns(http.HttpResponse(status="100 this is the text", data="data", 
                                                     headers=['jee']))
+
         start_response = yamf.MockMethod()
         start_response.mustBeCalled.withArgs("100 this is the text", ['jee'])
 
         environ = {}
-        self.assertEquals(app(environ, start_response), "data")
+        self.assertEquals(self.app(environ, start_response), "data")
         start_response.verify()       
 
 class TestRouteNotFound(unittest.TestCase):
