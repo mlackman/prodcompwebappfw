@@ -12,4 +12,4 @@ class HttpResponse(object):
     def __init__(self, status=None, data=None, headers=None):
         self.status = status
         self.data = data
-        self.headers = headers
+        self.headers = headers or []
