@@ -38,7 +38,7 @@ class TestWebApp(unittest.TestCase):
         start_response.mustBeCalled.withArgs("100 this is the text", ['jee'])
 
         environ = {}
-        self.assertEquals(self.app(environ, start_response), "data")
+        self.assertEquals(self.app(environ, start_response), ["data"])
         start_response.verify()       
 
 class TestRouteNotFound(unittest.TestCase):
