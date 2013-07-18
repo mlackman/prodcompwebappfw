@@ -11,4 +11,5 @@ class EveryRequestHandler(object):
         self._response = response
 
     def __call__(self, request):
+        "Serves all requests with given response"
         return True, self._response
