@@ -19,11 +19,13 @@ class WebApp(object):
 
 class Router(object):
 
-    def __init__(self, request_handlers):
+    def __init__(self, request_handler_callables):
         """Constructs the request router.
-        request_handlers - List of RequestHandler objects.
+        request_handlers - List of request handler callables. The callable must take http.request
+        parameter. It must return tuple containing boolean indicating if the request was served and
+        the httpresponse. Example (True, HttpResponse())
         """
-        self._request_handlers = request_handlers
+        self._request_handlers = request_handler_callables
         # Last handler will respond 404
         self._add_404_request_handler_for_last_request_handler()
 
@@ -33,7 +35,7 @@ class Router(object):
 
     def route(self, request):
         for request_handler in self._request_handlers:
-            served, response = request_handler.serve(request)
+            served, response = request_handler(request)
             if served: break
         return response
 

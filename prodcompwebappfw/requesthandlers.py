@@ -10,5 +10,5 @@ class EveryRequestHandler(object):
     def __init__(self, response):
         self._response = response
 
-    def serve(self, request):
+    def __call__(self, request):
         return True, self._response
