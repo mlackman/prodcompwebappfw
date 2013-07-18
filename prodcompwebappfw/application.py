@@ -10,7 +10,7 @@ class WebApp(object):
 
     def __init__(self, router, request_factory=None): 
         self._router = router
-        self._request_factory = request_factory
+        self._request_factory = request_factory or RequestFactory()
 
     def __call__(self, environ, start_response):
         """WSGI callable"""
@@ -43,3 +43,8 @@ class Router(object):
             served, response = request_handler(request)
             if served: break
         return response
+
+class RequestFactory(object):
+    # TODO: Implement
+    def create(self, environ):
+        return None

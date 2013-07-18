@@ -17,6 +17,5 @@ class ProductCompareWebApp(object):
         httpd.handle_request()
 
     def __call__(self, environ, start_response):
-        response_headers = [('Content-type', 'text/html')]
-        start_response('200 OK', response_headers)
-        return ['']
+        app = application.WebApp(application.Router([]))
+        return app(environ, start_response)
