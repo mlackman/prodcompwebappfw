@@ -15,7 +15,9 @@ class WebApp(object):
     def __call__(self, environ, start_response):
         """WSGI callable"""
         request = self._request_factory.create(environ)
-        self._router.route(request)
+        response = self._router.route(request)
+        start_response(response.status, response.headers)
+        return response.data
 
 class Router(object):
 
@@ -31,15 +33,10 @@ class Router(object):
 
     def _add_404_request_handler_for_last_request_handler(self):
         self._request_handlers.insert(len(self._request_handlers), \
-            requesthandlers.EveryRequestHandler(HttpResponse(http.response.not_found)))
+            requesthandlers.EveryRequestHandler(http.HttpResponse(http.status.not_found)))
 
     def route(self, request):
         for request_handler in self._request_handlers:
             served, response = request_handler(request)
             if served: break
         return response
-
-class HttpResponse(object):
-    
-    def __init__(self, status):
-        self.status = status

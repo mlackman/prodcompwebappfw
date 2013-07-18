@@ -22,12 +22,26 @@ class TestWebApp(unittest.TestCase):
         environ = {}
         request = yamf.Mock()
         request_factory.create.mustBeCalled.withArgs(environ).returns(request)
-        router.route.mustBeCalled.withArgs(request)
+        router.route.mustBeCalled.withArgs(request).returns(http.HttpResponse())
 
         app(environ, yamf.MockMethod())
 
         router.verify()
         request_factory.verify()
+
+    def test_it_responses(self):
+        request_factory = yamf.Mock()
+        router = yamf.Mock()
+        app = WebApp(router, request_factory)
+        
+        router.route.returns(http.HttpResponse(status="100 this is the text", data="data", 
+                                                    headers=['jee']))
+        start_response = yamf.MockMethod()
+        start_response.mustBeCalled.withArgs("100 this is the text", ['jee'])
+
+        environ = {}
+        self.assertEquals(app(environ, start_response), "data")
+        start_response.verify()       
 
 class TestRouteNotFound(unittest.TestCase):
 
@@ -36,7 +50,7 @@ class TestRouteNotFound(unittest.TestCase):
         request_handler.returns((False, None))
         router = Router([request_handler])
         response = router.route(None)
-        self.assertEquals(response.status, http.response.not_found)
+        self.assertEquals(response.status, http.status.not_found)
 
 class TestRouteFound(unittest.TestCase):
     
