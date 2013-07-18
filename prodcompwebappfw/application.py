@@ -3,6 +3,7 @@
 # TODO: start_response must be called
 
 import http
+import requesthandlers
 
 class WebApp(object):
     """WSGI App"""
@@ -18,11 +19,23 @@ class WebApp(object):
 
 class Router(object):
 
-    def __init__(self, routes):
-        pass
+    def __init__(self, request_handlers):
+        """Constructs the request router.
+        request_handlers - List of RequestHandler objects.
+        """
+        self._request_handlers = request_handlers
+        # Last handler will respond 404
+        self._add_404_request_handler_for_last_request_handler()
+
+    def _add_404_request_handler_for_last_request_handler(self):
+        self._request_handlers.insert(len(self._request_handlers), \
+            requesthandlers.EveryRequestHandler(HttpResponse(http.response.not_found)))
 
     def route(self, request):
-        return HttpResponse(http.response.not_found)
+        for request_handler in self._request_handlers:
+            served, response = request_handler.serve(request)
+            if served: break
+        return response
 
 class HttpResponse(object):
     
