@@ -6,7 +6,7 @@ import renderer
 class ProductCompareWebApp(object):
 
     def __init__(self, template_folder, index_template, products_template, no_products_found_template, \
-                 error_template, databases):
+                 error_template, static_content_folder, databases):
         """Creates web app.
         template_folder - Path to the templates
         index_template - Index page template name

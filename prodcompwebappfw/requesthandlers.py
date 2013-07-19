@@ -24,7 +24,8 @@ class StaticPageHandler(object):
 
     def __call__(self, request):
         content = self._renderer.render(self._template_name)
-        return http.HttpResponse(status=http.status.ok, data=content)
+        content_type = ("Content-Type", "text/html")
+        return http.HttpResponse(status=http.status.ok, data=content, headers=[content_type])
 
 class RequestMatcher(object):
     """Object to match url and if the url matches then calls the handler callable"""
