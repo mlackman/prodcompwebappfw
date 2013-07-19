@@ -45,6 +45,7 @@ class Router(object):
         return response
 
 class RequestFactory(object):
-    # TODO: Implement
+
     def create(self, environ):
-        return None
+        path = environ['PATH_INFO'] or '/'
+        return http.HttpRequest(path)

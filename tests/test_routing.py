@@ -4,7 +4,7 @@ import sys
 from os.path import join, pardir
 
 sys.path.insert(0, join(pardir))
-from prodcompwebappfw.application import WebApp, Router
+from prodcompwebappfw.application import WebApp, Router, RequestFactory
 from prodcompwebappfw import http
 
 """
@@ -73,6 +73,22 @@ class TestRouteFound(unittest.TestCase):
         request_handler.returns(return_value)
         return request_handler
 
+class TestCreatingRequests(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = {}
+
+    def testEmptyPath(self):
+        self.environ['PATH_INFO'] = ''
+        f = RequestFactory()
+        request = f.create(self.environ)
+        self.assertEquals(request.path, '/')
+
+    def testComplesPath(self):
+        self.environ['PATH_INFO'] = '/data/path?q=jee&j=q'
+        f = RequestFactory()
+        request = f.create(self.environ)
+        self.assertEquals(request.path, '/data/path?q=jee&j=q')
 
 
 if __name__ == '__main__':

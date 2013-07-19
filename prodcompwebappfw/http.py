@@ -13,3 +13,8 @@ class HttpResponse(object):
         self.status = status
         self.data = data
         self.headers = headers or []
+
+class HttpRequest(object):
+
+    def __init__(self, path):
+        self.path = path
