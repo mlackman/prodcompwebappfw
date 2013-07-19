@@ -31,7 +31,5 @@ class TestRequestMatches(unittest.TestCase):
 
         handler.verify()
 
-
-
 if __name__ == '__main__':
     unittest.main()

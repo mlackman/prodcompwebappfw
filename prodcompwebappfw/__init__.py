@@ -14,7 +14,7 @@ class ProductCompareWebApp(object):
         databases - Location of the databases"""
         indexHandler = requesthandlers.StaticPageHandler(renderer.Renderer(template_folder),\
                                                          index_template)
-        matcher = requesthandlers.RequestMatcher('/', indexHandler)
+        matcher = requesthandlers.RequestMatcher('/$', indexHandler)
         self._routes = application.Router([matcher])
         
     def serve_once(self, port):
