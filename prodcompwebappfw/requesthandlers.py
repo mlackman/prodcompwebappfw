@@ -1,3 +1,4 @@
+import re
 
 """
 RequestHandler objects must implement serve method, which returns tuple (request_served, 
@@ -13,3 +14,18 @@ class EveryRequestHandler(object):
     def __call__(self, request):
         "Serves all requests with given response"
         return True, self._response
+
+
+class RequestMatcher(object):
+    """Object to match url and if the url matches then calls the handler callable"""
+
+    def __init__(self, url_regexp, handler_callable):
+        self._regexp = re.compile(url_regexp)
+        self._handler_callable = handler_callable
+
+    def __call__(self, request):
+        if self._regexp.match(request.path):
+            return True, self._handler_callable(request)
+        else:
+            return False, None
+        

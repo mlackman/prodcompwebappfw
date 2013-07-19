@@ -13,10 +13,11 @@ from prodcompwebappfw import ProductCompareWebApp
 class TestServingPages(unittest.TestCase):
 
     def test_serving_index_page(self):
-        self.app = ProductCompareWebApp(index_template='templates/index.html',\
-                                        products_template='templates/products.html',\
-                                        no_products_found_template='templates/no_products.html',
-                                        error_template='templates/error.html',
+        self.app = ProductCompareWebApp(template_folder = 'templates',
+                                        index_template='index.html',\
+                                        products_template='products.html',\
+                                        no_products_found_template='no_products.html',
+                                        error_template='error.html',
                                         databases = ['database'])
         webAppServeThread = threading.Thread(target=self.execute)
         webAppServeThread.start()

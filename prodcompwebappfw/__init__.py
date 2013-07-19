@@ -3,11 +3,12 @@ import application
 
 class ProductCompareWebApp(object):
 
-    def __init__(self, index_template, products_template, no_products_found_template, \
+    def __init__(self, template_folder, index_template, products_template, no_products_found_template, \
                  error_template, databases):
         """Creates web app.
-        index_template - Location of the jinja2 template for the index page.
-        products_template - Location of the jinja2 template for the page, which shows the found products
+        template_folder - Path to the templates
+        index_template - Index page template name
+        products_template - ...
         databases - Location of the databases"""
         pass
         
