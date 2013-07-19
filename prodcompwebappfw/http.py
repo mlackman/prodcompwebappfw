@@ -3,6 +3,7 @@ class Status(object):
 
     def __init__(self):
         self.not_found = '404 Not Found'
+        self.ok = '200 OK'
 
 status = Status()
 

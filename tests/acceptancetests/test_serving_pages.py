@@ -5,7 +5,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import time
 
-from os.path import pardir,join
+from os.path import pardir,join, abspath, dirname
 sys.path.insert(0, join(pardir, pardir))
 
 from prodcompwebappfw import ProductCompareWebApp
@@ -13,7 +13,7 @@ from prodcompwebappfw import ProductCompareWebApp
 class TestServingPages(unittest.TestCase):
 
     def test_serving_index_page(self):
-        self.app = ProductCompareWebApp(template_folder = 'templates',
+        self.app = ProductCompareWebApp(template_folder = join(dirname(abspath(__file__)),'templates'),
                                         index_template='index.html',\
                                         products_template='products.html',\
                                         no_products_found_template='no_products.html',
@@ -28,7 +28,7 @@ class TestServingPages(unittest.TestCase):
 
         soup = BeautifulSoup(html)
 
-        self.assertEquals(soup.title, 'index_page')
+        self.assertEquals(soup.title.string, 'index_page')
 
     def execute(self):
         self.app.serve_once(8085)

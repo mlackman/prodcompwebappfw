@@ -1,4 +1,5 @@
 import re
+import http
 
 """
 RequestHandler objects must implement serve method, which returns tuple (request_served, 
@@ -15,6 +16,15 @@ class EveryRequestHandler(object):
         "Serves all requests with given response"
         return True, self._response
 
+class StaticPageHandler(object):
+
+    def __init__(self, renderer, template_name):
+        self._renderer = renderer
+        self._template_name = template_name
+
+    def __call__(self, request):
+        content = self._renderer.render(self._template_name)
+        return http.HttpResponse(status=http.status.ok, data=content)
 
 class RequestMatcher(object):
     """Object to match url and if the url matches then calls the handler callable"""

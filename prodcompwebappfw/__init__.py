@@ -1,5 +1,7 @@
 from wsgiref.simple_server import make_server
 import application
+import requesthandlers
+import renderer
 
 class ProductCompareWebApp(object):
 
@@ -10,7 +12,10 @@ class ProductCompareWebApp(object):
         index_template - Index page template name
         products_template - ...
         databases - Location of the databases"""
-        pass
+        indexHandler = requesthandlers.StaticPageHandler(renderer.Renderer(template_folder),\
+                                                         index_template)
+        matcher = requesthandlers.RequestMatcher('/', indexHandler)
+        self._routes = application.Router([matcher])
         
     def serve_once(self, port):
         """Helper method to serve this app on localhost"""
@@ -18,5 +23,5 @@ class ProductCompareWebApp(object):
         httpd.handle_request()
 
     def __call__(self, environ, start_response):
-        app = application.WebApp(application.Router([]))
+        app = application.WebApp(self._routes)
         return app(environ, start_response)
