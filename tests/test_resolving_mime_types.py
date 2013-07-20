@@ -16,9 +16,5 @@ class TestResolvingMimeTypes(unittest.TestCase):
         resolver = MimeTypeResolver()
         self.assertEquals('text/html', resolver.get_type('path/to/filename.html'))
 
-
-
-
-
 if __name__ == '__main__':
     unittest.main()

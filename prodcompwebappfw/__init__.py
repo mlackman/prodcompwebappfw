@@ -1,3 +1,4 @@
+import os
 from wsgiref.simple_server import make_server
 import application
 import requesthandlers
@@ -14,8 +15,14 @@ class ProductCompareWebApp(object):
         databases - Location of the databases"""
         indexHandler = requesthandlers.StaticPageHandler(renderer.Renderer(template_folder),\
                                                          index_template)
-        matcher = requesthandlers.RequestMatcher('/$', indexHandler)
-        self._routes = application.Router([matcher])
+        matcher = requesthandlers.RequestMatcher('^/$', indexHandler)
+
+        static_file_handler = requesthandlers.StaticFileHandler(os.listdir(static_content_folder),\
+                                                                static_content_folder)
+        static_file_matcher = requesthandlers.RequestMatcher('^/' + static_content_folder + '/.*',
+                                                             static_file_handler)
+
+        self._routes = application.Router([matcher, static_file_matcher])
         
     def serve_once(self, port):
         """Helper method to serve this app on localhost"""
