@@ -1,11 +1,11 @@
 
-class Status(object):
+class HttpStatus(object):
 
     def __init__(self):
         self.not_found = '404 Not Found'
         self.ok = '200 OK'
 
-status = Status()
+status = HttpStatus()
 
 
 class HttpResponse(object):

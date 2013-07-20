@@ -1,6 +1,7 @@
 import re
 import os
 import http
+import services
 
 """
 RequestHandler objects must implement serve method, which returns tuple (request_served, 
@@ -32,13 +33,13 @@ class StaticFileHandler(object):
     """Reads files from folder and returns the content of the files
     with correct mime type"""
 
-    def __init__(self, filenames, folder, content_type_resolver=None, filesystem=None):
+    def __init__(self, filenames, folder, mime_type_resolver=None, filesystem=None):
         """Creates object.
         filenames - list of filenames in folder that are served.
         folder - Folder where the files are loaded"""
         self._filenames = [os.path.join(folder, filename) for filename in filenames]
-        self._filesystem = filesystem
-        self._content_type_resolver = content_type_resolver
+        self._filesystem = filesystem or services.Filesystem()
+        self._mime_type_resolver = mime_type_resolver or services.MimeTypeResolver()
 
     def __call__(self, request):
         requested_filename = request.path[1:]
@@ -48,7 +49,7 @@ class StaticFileHandler(object):
             except:
                 return http.HttpResponse(http.status.not_found)    
 
-            mime_type = self._content_type_resolver.get_type(requested_filename)
+            mime_type = self._mime_type_resolver.get_type(requested_filename)
             content_type = ('Content-Type', mime_type)
             return http.HttpResponse(status=http.status.ok, data=content, headers=[content_type])
         else:
