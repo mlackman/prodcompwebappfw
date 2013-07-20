@@ -4,10 +4,6 @@ import application
 import requesthandlers
 import renderer
 
-print dir()
-def create_app():
-    pass
-
 class ProductCompareWebApp(object):
 
     def __init__(self, template_folder, index_template, products_template, no_products_found_template, \
