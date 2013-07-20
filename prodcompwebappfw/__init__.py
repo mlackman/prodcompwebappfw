@@ -4,6 +4,10 @@ import application
 import requesthandlers
 import renderer
 
+print dir()
+def create_app():
+    pass
+
 class ProductCompareWebApp(object):
 
     def __init__(self, template_folder, index_template, products_template, no_products_found_template, \
@@ -28,6 +32,10 @@ class ProductCompareWebApp(object):
         """Helper method to serve this app on localhost"""
         httpd = make_server('localhost', port, self)
         httpd.handle_request()
+
+    def serve(self, port=None):
+        httpd = make_server('localhost', port or 8085, self)
+        httpd.serve_forever()
 
     def __call__(self, environ, start_response):
         app = application.WebApp(self._routes)
