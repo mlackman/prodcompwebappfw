@@ -28,10 +28,16 @@ class TestFileNotFound(unittest.TestCase):
 
 class TestFileFound(unittest.TestCase):
 
-    def test_css_file_is_returned(self):
-        filesystem = yamf.Mock()
-        filesystem.read.returns('content')
-        handler = StaticFileHandler(['somefile.css'], 'static', filesystem)
+    def setUp(self):
+        self.content_type_resolver = yamf.Mock()
+        self.filesystem = yamf.Mock()
+
+    def test_file_is_returned(self):
+        self.filesystem.read.returns('content')
+        self.content_type_resolver.get_type.returns('text/css')
+
+        handler = StaticFileHandler(['somefile.css'], 'static', self.content_type_resolver, self.filesystem)
+        
         response = handler(http.HttpRequest('/static/somefile.css'))
 
         self.assertEquals(response.status, http.status.ok)

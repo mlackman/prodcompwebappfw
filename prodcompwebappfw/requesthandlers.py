@@ -32,23 +32,24 @@ class StaticFileHandler(object):
     """Reads files from folder and returns the content of the files
     with correct mime type"""
 
-    def __init__(self, filenames, folder, filesystem=None):
+    def __init__(self, filenames, folder, content_type_resolver=None, filesystem=None):
         """Creates object.
         filenames - list of filenames in folder that are served.
         folder - Folder where the files are loaded"""
         self._filenames = [os.path.join(folder, filename) for filename in filenames]
         self._filesystem = filesystem
+        self._content_type_resolver = content_type_resolver
 
     def __call__(self, request):
         requested_filename = request.path[1:]
         if requested_filename in self._filenames:
             try:
-                content = self._filesystem.read(requested_filename).encode('utf-8')
+                content = self._filesystem.read(requested_filename)
             except:
                 return http.HttpResponse(http.status.not_found)    
 
-            mime = 'text/css'
-            content_type = ('Content-Type', mime)
+            mime_type = self._content_type_resolver.get_type(requested_filename)
+            content_type = ('Content-Type', mime_type)
             return http.HttpResponse(status=http.status.ok, data=content, headers=[content_type])
         else:
             return http.HttpResponse(http.status.not_found)
