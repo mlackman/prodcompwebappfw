@@ -27,7 +27,7 @@ class StaticPageHandler(object):
     def __call__(self, request):
         content = self._renderer.render(self._template_name)
         response = http.HttpResponse(http.status.ok, content)
-        response.headers.add_header('Content-Type', 'text/html')
+        response.headers.add_header('Content-Type', 'text/html', charset='utf8')
         return response
 
 class StaticFileHandler(object):
@@ -52,7 +52,7 @@ class StaticFileHandler(object):
 
             mime_type = self._mime_type_resolver.get_type(requested_filename)
             response = http.HttpResponse(status=http.status.ok, data=content)
-            response.headers.add_header('Content-Type', mime_type)
+            response.headers.add_header('Content-Type', mime_type, charset='utf8')
             return response
         else:
             return http.HttpResponse(http.status.not_found)
