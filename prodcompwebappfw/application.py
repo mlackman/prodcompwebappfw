@@ -16,7 +16,7 @@ class WebApp(object):
         """WSGI callable"""
         request = self._request_factory.create(environ)
         response = self._router.route(request)
-        start_response(response.status, response.headers)
+        start_response(response.status, response.headers.items())
         if response.data:
             return [response.data.encode('UTF-8')]
         else:

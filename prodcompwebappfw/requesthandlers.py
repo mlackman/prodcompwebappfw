@@ -26,8 +26,9 @@ class StaticPageHandler(object):
 
     def __call__(self, request):
         content = self._renderer.render(self._template_name)
-        content_type = ("Content-Type", "text/html")
-        return http.HttpResponse(status=http.status.ok, data=content, headers=[content_type])
+        response = http.HttpResponse(http.status.ok, content)
+        response.headers.add_header('Content-Type', 'text/html')
+        return response
 
 class StaticFileHandler(object):
     """Reads files from folder and returns the content of the files
@@ -50,8 +51,9 @@ class StaticFileHandler(object):
                 return http.HttpResponse(http.status.not_found)    
 
             mime_type = self._mime_type_resolver.get_type(requested_filename)
-            content_type = ('Content-Type', mime_type)
-            return http.HttpResponse(status=http.status.ok, data=content, headers=[content_type])
+            response = http.HttpResponse(status=http.status.ok, data=content)
+            response.headers.add_header('Content-Type', mime_type)
+            return response
         else:
             return http.HttpResponse(http.status.not_found)
 

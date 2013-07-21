@@ -42,7 +42,7 @@ class TestFileFound(unittest.TestCase):
 
         self.assertEquals(response.status, http.status.ok)
         self.assertEquals(response.data, 'content')
-        self.assertTrue(('Content-Type', 'text/css') in response.headers)
+        self.assertTrue('text/css' in response.headers['Content-Type'])
 
 
 

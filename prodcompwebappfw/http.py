@@ -1,3 +1,4 @@
+import wsgiref
 
 class HttpStatus(object):
 
@@ -10,10 +11,11 @@ status = HttpStatus()
 
 class HttpResponse(object):
     
-    def __init__(self, status=None, data=None, headers=None):
+    def __init__(self, status=None, data=None):
         self.status = status
         self.data = data
-        self.headers = headers or []
+        self.headers = wsgiref.headers.Headers([])
+
 
 class HttpRequest(object):
 

@@ -31,11 +31,13 @@ class TestWebApp(unittest.TestCase):
         self.request_factory.verify()
 
     def test_it_responses(self):
-        self.router.route.returns(http.HttpResponse(status="100 this is the text", data="data", 
-                                                    headers=['jee']))
+        response = http.HttpResponse(status="100 this is the text", data="data")
+        response.headers.add_header('content-type','text/html')
+        self.router.route.returns(response)
 
         start_response = yamf.MockMethod()
-        start_response.mustBeCalled.withArgs("100 this is the text", ['jee'])
+        start_response.mustBeCalled.withArgs("100 this is the text", 
+            [('content-type', 'text/html')])
 
         environ = {}
         self.assertEquals(self.app(environ, start_response), ["data"])
