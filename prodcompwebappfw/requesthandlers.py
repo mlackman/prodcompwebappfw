@@ -34,13 +34,13 @@ class StaticFileHandler(object):
     """Reads files from folder and returns the content of the files
     with correct mime type"""
 
-    def __init__(self, filenames, folder, mime_type_resolver=None, filesystem=None):
+    def __init__(self, filenames, folder, filesystem=None):
         """Creates object.
         filenames - list of filenames in folder that are served.
         folder - Folder where the files are loaded"""
         self._filenames = [os.path.join(folder, filename) for filename in filenames]
         self._filesystem = filesystem or services.Filesystem()
-        self._mime_type_resolver = mime_type_resolver or services.MimeTypeResolver()
+        self._mime_type_resolver = services.MimeTypeResolver()
 
     def __call__(self, request):
         requested_filename = request.path[1:]
