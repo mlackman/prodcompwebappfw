@@ -41,6 +41,15 @@ class TestFileFound(unittest.TestCase):
         self.assertEquals(response.data, 'content')
         self.assertTrue('text/css' in response.headers['Content-Type'])
 
+    def test_charset_not_set_when_content_is_binary(self):
+        self.filesystem.read.returns('content')
+        handler = StaticFileHandler(['pic.png'], 'static', self.filesystem)
+        
+        response = handler(http.HttpRequest('/static/pic.png'))
+        self.assertTrue('charset="utf8"' not in response.headers['Content-Type'])
+
+
+
 
 
 

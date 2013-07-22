@@ -1,16 +1,18 @@
 
 # TODO: __call__ to handle exceptions like pep333 succests.
-# TODO: start_response must be called
 
 import http
 import requesthandlers
+import services
+import re
 
 class WebApp(object):
     """WSGI App"""
 
-    def __init__(self, router, request_factory=None): 
+    def __init__(self, router, request_factory=None, content_encoder=None): 
         self._router = router
         self._request_factory = request_factory or RequestFactory()
+        self._content_encoder = content_encoder or services.ContentEncoder()
 
     def __call__(self, environ, start_response):
         """WSGI callable"""
@@ -18,9 +20,18 @@ class WebApp(object):
         response = self._router.route(request)
         start_response(response.status, response.headers.items())
         if response.data:
-            return [response.data.encode('UTF-8')]
+            return [self._encode_response_data(response)]
         else:
             return []
+
+    def _encode_response_data(self, response):
+        content_type = response.headers['content-type']
+        match = re.search('charset="(?P<encoding>.+)"', content_type)
+        if match:
+            data = self._content_encoder.encode(response.data, match.group('encoding'))
+        else:
+            data = response.data
+        return data
 
 class Router(object):
 

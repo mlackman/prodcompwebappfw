@@ -50,12 +50,19 @@ class StaticFileHandler(object):
             except:
                 return http.HttpResponse(http.status.not_found)    
 
-            mime_type = self._mime_type_resolver.get_type(requested_filename)
+            
             response = http.HttpResponse(status=http.status.ok, data=content)
-            response.headers.add_header('Content-Type', mime_type, charset='utf8')
+            self._set_headers(response, requested_filename)
             return response
         else:
             return http.HttpResponse(http.status.not_found)
+
+    def _set_headers(self, response, requested_filename):
+        mime_type = self._mime_type_resolver.get_type(requested_filename)
+        if mime_type.is_text_type:
+            response.headers.add_header('Content-Type', str(mime_type), charset='utf8')
+        else:
+            response.headers.add_header('Content-Type', str(mime_type))
 
 
 

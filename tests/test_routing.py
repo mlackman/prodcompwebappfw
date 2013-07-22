@@ -41,7 +41,8 @@ class TestWebApp(unittest.TestCase):
 
         environ = {}
         self.assertEquals(self.app(environ, start_response), ["data"])
-        start_response.verify()       
+        start_response.verify()
+
 
 class TestRouteNotFound(unittest.TestCase):
 
