@@ -64,7 +64,14 @@ class StaticFileHandler(object):
         else:
             response.headers.add_header('Content-Type', str(mime_type))
 
+class SearchProductsHandler(object):
 
+    def __init__(self, database):
+        self._database = database
+
+    def __call__(self, request):
+        search_words = request.query_value('q')
+        self._database.search(search_words)
 
 class RequestMatcher(object):
     """Object to match url and if the url matches then calls the handler callable"""

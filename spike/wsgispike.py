@@ -5,7 +5,7 @@ from wsgiref.simple_server import make_server
 
 def simple_app(environ, start_response):
     """Simplest possible application object"""
-    print environ
+    print environ['PATH_INFO']
     print urlparse.urlparse(wsgiref.util.request_uri(environ))
     env = Environment(loader=FileSystemLoader('templates'))
     status = '200 OK'
