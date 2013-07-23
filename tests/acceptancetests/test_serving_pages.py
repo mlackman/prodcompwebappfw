@@ -22,26 +22,28 @@ class TestServingPages(unittest.TestCase):
                                         databases = ['database'])
 
     def test_serving_index_page(self):
-        webAppServeThread = threading.Thread(target=self.execute)
-        webAppServeThread.start()
-        time.sleep(1)
-        f = urllib2.urlopen('http://localhost:8085')
-        html = f.read()
-        f.close()
+        self.start_server()
+        html = self.read('http://localhost:8085')
 
         soup = BeautifulSoup(html)
 
         self.assertEquals(soup.title.string, 'index_page')
 
     def test_serving_static_content(self):
+        self.start_server()
+        css = self.read('http://localhost:8085/static/main.css')
+        self.assertEquals(css, 'css file')
+
+    def read(self, url):
+        f = urllib2.urlopen(url)
+        data = f.read()
+        f.close()
+        return data
+
+    def start_server(self):
         webAppServeThread = threading.Thread(target=self.execute)
         webAppServeThread.start()
         time.sleep(1)
-        f = urllib2.urlopen('http://localhost:8085/static/main.css')
-        css = f.read()
-        f.close()
-
-        self.assertEquals(css, 'css file')
 
     def execute(self):
         self.app.serve_once(8085)
