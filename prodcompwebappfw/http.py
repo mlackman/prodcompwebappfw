@@ -17,7 +17,6 @@ class HttpResponse(object):
         self.data = data
         self.headers = wsgiref.headers.Headers([])
 
-
 class HttpRequest(object):
 
     def __init__(self, path, query_params=None):
@@ -35,4 +34,9 @@ class HttpRequest(object):
         for param_value_pair in param_value_pairs:
             param, value = param_value_pair.split('=')
             self.query_params[param] = value
+
+def create_html_httpresponse(content):
+    response = HttpResponse(status.ok, content)
+    response.headers.add_header('Content-Type', 'text/html', charset='utf8')
+    return response
 

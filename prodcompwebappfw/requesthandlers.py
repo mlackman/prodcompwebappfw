@@ -26,9 +26,7 @@ class StaticPageHandler(object):
 
     def __call__(self, request):
         content = self._renderer.render(self._template_name)
-        response = http.HttpResponse(http.status.ok, content)
-        response.headers.add_header('Content-Type', 'text/html', charset='utf8')
-        return response
+        return http.create_html_httpresponse(content)
 
 class StaticFileHandler(object):
     """Reads files from folder and returns the content of the files
@@ -66,12 +64,17 @@ class StaticFileHandler(object):
 
 class SearchProductsHandler(object):
 
-    def __init__(self, database):
+    def __init__(self, no_products_template, database, renderer):
         self._database = database
+        self._no_products_template = no_products_template
+        self._renderer = renderer
 
     def __call__(self, request):
         search_words = request.query_param_value('q')
         self._database.search(search_words)
+        content = self._renderer.render(self._no_products_template)
+        return http.create_html_httpresponse(content)
+
 
 class RequestMatcher(object):
     """Object to match url and if the url matches then calls the handler callable"""

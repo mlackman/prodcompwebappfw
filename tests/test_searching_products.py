@@ -5,19 +5,34 @@ from os.path import join, pardir
 
 sys.path.insert(0, join(pardir))
 from prodcompwebappfw.requesthandlers import SearchProductsHandler
-from prodcompwebappfw import http
+from prodcompwebappfw import http, renderer
 import productrepository
 
 class TestSearchProductsHandler(unittest.TestCase):
 
+    def setUp(self):
+        self.renderer = yamf.Mock(renderer.Renderer)
+        self.database = yamf.Mock(productrepository.ProductRepository)
+        self.database.search.mustBeCalled.withArgs('search words')\
+                     .returns(productrepository.SearchResult())
+        self.handler = SearchProductsHandler(no_products_template='no_products.html',\
+                                             database=self.database,\
+                                             renderer=self.renderer)
+
     def test_it_searches_database_with_query_parameter(self):
-        database = yamf.Mock(productrepository.ProductRepository)
-        database.search.mustBeCalled.withArgs('search words').returns(productrepository.SearchResult())
-        handler = SearchProductsHandler(database)
+        self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
 
-        handler(http.HttpRequest(path='/search', query_params='q=search words'))
+        self.database.verify()
 
-        database.verify()
+    def test_it_renders_no_products_template_when_no_hits_found(self):
+        self.renderer.render.mustBeCalled.withArgs('no_products.html')
+        self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
+        self.renderer.verify()
+
+    def test_it_puts_renderered_data_to_response(self):
+        self.renderer.render.returns('rendered data')
+        response = self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
+        self.assertEquals('rendered data', response.data)
 
 
 if __name__ == '__init__':
