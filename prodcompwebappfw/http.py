@@ -1,4 +1,5 @@
 import wsgiref
+import re
 
 class HttpStatus(object):
 
@@ -21,7 +22,17 @@ class HttpRequest(object):
 
     def __init__(self, path, query_params=None):
         self.path = path
-        self.query_params = query_params or ''
+        self._create_query_params_map(query_params)
 
-    def query_value(self, query_parameter):
-        return 'search words'
+    def query_param_value(self, query_parameter):
+        """Returns query parameter value by name or None if query parameter does
+        not exists"""
+        return self.query_params.get(query_parameter, None)
+
+    def _create_query_params_map(self, query_params):
+        param_value_pairs = query_params.split('&') if query_params else ''
+        self.query_params = {}
+        for param_value_pair in param_value_pairs:
+            param, value = param_value_pair.split('=')
+            self.query_params[param] = value
+

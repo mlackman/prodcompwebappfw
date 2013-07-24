@@ -70,7 +70,7 @@ class SearchProductsHandler(object):
         self._database = database
 
     def __call__(self, request):
-        search_words = request.query_value('q')
+        search_words = request.query_param_value('q')
         self._database.search(search_words)
 
 class RequestMatcher(object):
