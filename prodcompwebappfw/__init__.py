@@ -3,6 +3,7 @@ from wsgiref.simple_server import make_server
 import application
 import requesthandlers
 import renderer
+import productrepository
 
 class ProductCompareWebApp(object):
 
@@ -13,6 +14,8 @@ class ProductCompareWebApp(object):
         index_template - Index page template name
         products_template - ...
         databases - Location of the databases"""
+        database = database or productrepository.ProductRepository(databases)
+
         r = renderer.Renderer(template_folder)
         indexHandler = requesthandlers.StaticPageHandler(r, index_template)
         matcher = requesthandlers.RequestMatcher('^/$', indexHandler)
