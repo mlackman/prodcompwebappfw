@@ -50,7 +50,7 @@ class TestServingPages(unittest.TestCase):
         html = self.read('http://localhost:8085/search?q=vene')
 
         soup = BeautifulSoup(html)
-        self.assertEquals(soup.find_all('div', class_='product-info'), 1)
+        self.assertEquals(soup.title.string, 'products-page')
         
     def read(self, url):
         f = urllib2.urlopen(url)

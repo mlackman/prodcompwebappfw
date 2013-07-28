@@ -51,7 +51,7 @@ class TestProductsFound(unittest.TestCase):
         result.page_count = 1
         self.database.search.returns(result)
 
-        self.renderer.render.mustBeCalled.withArgs('products.html', result)
+        self.renderer.render.mustBeCalled.withArgs('products.html', search_result=result)
         self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
         self.renderer.verify()
 
