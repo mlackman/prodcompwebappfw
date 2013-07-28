@@ -64,15 +64,19 @@ class StaticFileHandler(object):
 
 class SearchProductsHandler(object):
 
-    def __init__(self, no_products_template, database, renderer):
+    def __init__(self, no_products_template, products_template, database, renderer):
         self._database = database
         self._no_products_template = no_products_template
+        self._products_template = products_template
         self._renderer = renderer
 
     def __call__(self, request):
         search_words = request.query_param_value('q')
-        self._database.search(search_words)
-        content = self._renderer.render(self._no_products_template)
+        result = self._database.search(search_words)
+        if len(result.products) > 0:
+            content = self._renderer.render(self._products_template, result)
+        else:
+            content = self._renderer.render(self._no_products_template)
         return http.create_html_httpresponse(content)
 
 

@@ -8,7 +8,7 @@ from prodcompwebappfw.requesthandlers import SearchProductsHandler
 from prodcompwebappfw import http, renderer
 import productrepository
 
-class TestSearchProductsHandler(unittest.TestCase):
+class TestNoProductsFound(unittest.TestCase):
 
     def setUp(self):
         self.renderer = yamf.Mock(renderer.Renderer)
@@ -16,6 +16,7 @@ class TestSearchProductsHandler(unittest.TestCase):
         self.database.search.mustBeCalled.withArgs('search words')\
                      .returns(productrepository.SearchResult())
         self.handler = SearchProductsHandler(no_products_template='no_products.html',\
+                                             products_template='products.html',\
                                              database=self.database,\
                                              renderer=self.renderer)
 
@@ -34,6 +35,26 @@ class TestSearchProductsHandler(unittest.TestCase):
         response = self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
         self.assertEquals('rendered data', response.data)
 
+class TestProductsFound(unittest.TestCase):
 
-if __name__ == '__init__':
+    def setUp(self):
+        self.renderer = yamf.Mock(renderer.Renderer)
+        self.database = yamf.Mock(productrepository.ProductRepository)
+        self.handler = SearchProductsHandler(no_products_template='no_products.html',\
+                                             products_template='products.html',\
+                                             database=self.database,\
+                                             renderer=self.renderer)
+
+    def test_it_renders_products_template_when_hits_found(self):
+        result = productrepository.SearchResult()
+        result.products = [yamf.Mock()]
+        result.page_count = 1
+        self.database.search.returns(result)
+
+        self.renderer.render.mustBeCalled.withArgs('products.html', result)
+        self.handler(http.HttpRequest(path='/search', query_params='q=search words'))
+        self.renderer.verify()
+
+
+if __name__ == '__main__':
     unittest.main()
