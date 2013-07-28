@@ -74,7 +74,7 @@ class SearchProductsHandler(object):
         search_words = request.query_param_value('q')
         result = self._database.search(search_words)
         if len(result.products) > 0:
-            content = self._renderer.render(self._products_template, search_result=result)
+            content = self._renderer.render(self._products_template, products=result.products)
         else:
             content = self._renderer.render(self._no_products_template)
         return http.create_html_httpresponse(content)

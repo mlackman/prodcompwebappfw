@@ -12,7 +12,7 @@ status = HttpStatus()
 
 class HttpResponse(object):
     
-    def __init__(self, status=None, data=None):
+    def __init__(self, status=None, data=None):      
         self.status = status
         self.data = data
         self.headers = wsgiref.headers.Headers([])

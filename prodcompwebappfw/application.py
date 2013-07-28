@@ -59,4 +59,4 @@ class RequestFactory(object):
 
     def create(self, environ):
         path = environ['PATH_INFO'] or '/'
-        return http.HttpRequest(path)
+        return http.HttpRequest(path, environ['QUERY_STRING'])

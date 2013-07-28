@@ -30,7 +30,7 @@ class ProductCompareWebApp(object):
         search_matcher = requesthandlers.RequestMatcher('^/search$', search_handler)
 
         self._routes = application.Router([matcher, static_file_matcher, search_matcher])
-        
+
     def serve_once(self, port):
         """Helper method to serve this app on localhost"""
         httpd = make_server('localhost', port, self)

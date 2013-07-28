@@ -79,7 +79,7 @@ class TestRouteFound(unittest.TestCase):
 class TestCreatingRequests(unittest.TestCase):
 
     def setUp(self):
-        self.environ = {}
+        self.environ = {'QUERY_STRING':''}
 
     def testEmptyPath(self):
         self.environ['PATH_INFO'] = ''
