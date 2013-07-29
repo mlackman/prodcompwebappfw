@@ -2,6 +2,7 @@ import re
 import os
 import http
 import services
+import urllib
 
 """
 RequestHandler objects must implement serve method, which returns tuple (request_served, 
@@ -72,9 +73,13 @@ class SearchProductsHandler(object):
 
     def __call__(self, request):
         search_words = request.query_param_value('q')
+        search_words = urllib.unquote(search_words)
+        print search_words
         result = self._database.search(search_words)
         if len(result.products) > 0:
-            content = self._renderer.render(self._products_template, products=result.products)
+            print search_words
+            content = self._renderer.render(self._products_template, products=result.products,\
+                search_words = search_words.decode('utf-8'))
         else:
             content = self._renderer.render(self._no_products_template)
         return http.create_html_httpresponse(content)
